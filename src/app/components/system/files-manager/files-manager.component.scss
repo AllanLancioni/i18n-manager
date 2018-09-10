@@ -1,0 +1,40 @@
+@import '../../../styles/variables';
+@import '../../../styles/reusable-components';
+
+#container {
+  height: calc(100vh - #{$header-height} - 40px);
+  width: 100%;
+  overflow: hidden;
+  #content {
+    overflow: auto;
+    @extend %container;
+  }
+}
+
+.menu-list {
+  list-style: none;
+  margin-left: 10px;
+  padding-left: 0;
+  &.closed {
+    display: none;
+  }
+
+  .menu-item {
+    font-size: 13px;
+    &.menu-item-title {
+      font-weight: bold;
+    }
+    a {
+      width: 100%;
+      display: block;
+      padding: 10px 5px;
+      background: transparent;
+      transition: .3s;
+      resize: none;
+      i {
+        font-size: 16px;
+        vertical-align: top;
+      }
+    }
+  }
+}

@@ -1,0 +1,28 @@
+@import './app/styles/variables';
+@import './app/styles/reusable-components';
+
+/* You can add global styles to this file, and also import other style files */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.no-wrap {
+  @extend %no-wrap;
+}
+
+a {
+  color: $font-color !important;
+  font-style: normal;
+  cursor: pointer;
+  &:hover {
+    opacity: .6;
+    text-decoration: none !important;
+  }
+}
+
+i {
+  vertical-align: bottom;
+  margin-right: 5px;
+}

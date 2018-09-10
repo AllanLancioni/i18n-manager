@@ -1,0 +1,23 @@
+@import './variables';
+
+%container {
+    background: #333;
+    box-shadow: $inset-shadow;
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    color: $font-color;
+    padding: 15px;
+
+    h1, /deep/ h1 {
+      font-size: 30px;
+      margin: 5px 0 15px;
+      @extend %no-wrap;
+    }
+}
+
+%no-wrap {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}

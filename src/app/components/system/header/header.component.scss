@@ -1,0 +1,11 @@
+@import '../../../styles/variables';
+@import '../../../styles/reusable-components';
+
+#container {
+  padding-bottom: 10px;
+  height: $header-height;
+  width: 100%;
+  #content {
+    @extend %container;
+  }
+}

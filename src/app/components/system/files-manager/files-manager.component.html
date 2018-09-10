@@ -1,0 +1,27 @@
+<div id="container">
+  <div id="content">
+
+    <ul class="menu-list">
+      <li class="menu-item" *ngFor="let item of appState?.activeTranslationStructure?.structure?.items || []">
+        <ng-container *ngTemplateOutlet="structureItem; context: { $implicit: item }"></ng-container>
+      </li>
+    </ul>
+
+  </div>
+</div>
+
+<ng-template #structureItem let-item>
+  <ng-container *ngIf="item?.values">
+    <a (click)="openItem(item)"><i class="material-icons">translate</i> {{ item.key }}</a>
+  </ng-container>
+  <ng-container *ngIf="item?.nested?.items?.length">
+    <li class="menu-item menu-item-title">
+      <a (click)="item.isOpen = !item.isOpen"><i class="material-icons">{{ item.isOpen ? 'folder_open' : 'folder' }}</i> {{ item.key }}</a>
+    </li>
+    <ul class="menu-list" [class.closed]="!item.isOpen">
+      <li class="menu-item" *ngFor="let item of item.nested.items">
+        <ng-container *ngTemplateOutlet="structureItem; context: { $implicit: item }"></ng-container>
+      </li>
+    </ul>
+  </ng-container>
+</ng-template>

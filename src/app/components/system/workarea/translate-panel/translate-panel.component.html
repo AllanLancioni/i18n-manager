@@ -1,0 +1,19 @@
+<div *ngIf="appState.actualItemToEdit?.values" class="">
+
+  <h1>{{ appState.actualItemToEdit?.fullKey }}</h1>
+
+  <div class="translate-block" *ngFor="let translation of appState.actualItemToEdit?.values || []">
+
+    <label>{{ translation?.key }}</label>
+    <textarea [(ngModel)]="translation.value"></textarea>
+    <hr>
+
+  </div>
+
+</div>
+
+<div *ngIf="!appState.actualItemToEdit?.values" class="no-item-selected">
+
+  <span>Select any item to translate!</span>
+
+</div>

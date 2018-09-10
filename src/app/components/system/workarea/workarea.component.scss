@@ -1,0 +1,12 @@
+@import '../../../styles/variables';
+@import '../../../styles/reusable-components';
+
+#container {
+  height: calc(100vh - #{$header-height} - 40px);
+  width: 100%;
+  overflow: hidden;
+  #content {
+    overflow: auto;
+    @extend %container;
+  }
+}

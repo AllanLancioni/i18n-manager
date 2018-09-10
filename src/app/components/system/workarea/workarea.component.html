@@ -1,0 +1,9 @@
+<div id="container">
+  <div id="content">
+    {{ appState.actualView }}
+
+    <app-translate-panel *ngIf="appState.actualView === 'TRANSLATE_PANEL'"></app-translate-panel>
+    <app-create-item *ngIf="appState.actualView === 'CREATE_ITEM'"></app-create-item>
+
+  </div>
+</div>
