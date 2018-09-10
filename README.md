@@ -1,4 +1,4 @@
-#i18n translate pattern manager
+# i18n translate pattern manager
 
 - An open source project built in Electron and Angular 6
 
