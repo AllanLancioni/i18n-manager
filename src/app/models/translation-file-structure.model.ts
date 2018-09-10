@@ -32,13 +32,13 @@ export class TranslationFileStructure {
       lang.forEach(x => {
         const equalInLanguage: TranslationFileItem = firstStructureItems.find(f => f.fullKey === x.fullKey);
         if (!equalInLanguage) {
-          return firstStructure.addByFullKey(x.fullKey, x.values)
+          return firstStructure.addByFullKey(x.fullKey, x.values);
         }
         equalInLanguage.values.push(...x.values);
-      })
-    })
+      });
+    });
 
-    firstStructure.toJSON();
+    firstStructure.toJSONMap();
 
     return firstStructure;
   }
@@ -57,28 +57,54 @@ export class TranslationFileStructure {
     return response;
   }
 
-  addByFullKey(fullKey: string, values: Translation[] = null) {
+  addByFullKey(fullKey: string, values: Translation[] = null): TranslationFileItem {
     const
-     pieces: string[] = fullKey.split(/\./g),
-     key = pieces[pieces.length - 1],
-     firstKey = pieces[0],
-     itemToAdd = new TranslationFileItem(firstKey, set({}, fullKey, values)[firstKey], null, null, this);
+      pieces: string[] = fullKey.split(/\./g),
+      // key = pieces[pieces.length - 1],
+      firstKey = pieces[0],
+      alreadyCreatedItem: TranslationFileItem = this.items.find(x => x.key === firstKey);
+
+    if (alreadyCreatedItem) {
+
+      if (pieces.length === 1) {
+        delete alreadyCreatedItem.nested;
+        alreadyCreatedItem.values = TranslationFileItem.defaultValue;
+        return alreadyCreatedItem;
+      } else {
+
+        const piecesExceptFirst = pieces.filter((x, i) => i !== 0);
+
+        if (alreadyCreatedItem.nested) {
+          alreadyCreatedItem.nested.addByFullKey(piecesExceptFirst.join('.'));
+        } else {
+          alreadyCreatedItem.nested = new TranslationFileStructure(
+            set({}, piecesExceptFirst.join('.'), null),
+            `${this.path}.${firstKey}`,
+            undefined,
+            alreadyCreatedItem
+          );
+          delete alreadyCreatedItem.values;
+        }
+
+        return alreadyCreatedItem.nested.items.find(x => x.key === firstKey);
+      }
+    }
+
+    const itemToAdd = new TranslationFileItem(firstKey, set({}, fullKey, values)[firstKey], this.path, null, this);
 
     this.items.push(itemToAdd);
     return itemToAdd;
   }
 
-  toJSON(): Map<string, object> {
+  toJSONMap(): Map<string, object> {
     const jsonByLanguages: Map<string, object> = new Map();
-    console.log(languages, this.deepIterator(x => x));
     languages.forEach(lang => {
       const json = this
-      .deepIterator(x => ({ key: x.fullKey, value: (v => v ? v.value : '')(x.values.find(v => v.key === lang)) }))
-      .reduce((ac, x) => set(ac, x.key, x.value), {});
+        .deepIterator(x => ({ key: x.fullKey, value: (v => v ? v.value : '')(x.values.find(v => v.key === lang)) }))
+        .reduce((ac, x) => set(ac, x.key, x.value), {});
 
       jsonByLanguages.set(lang, json);
-    })
-    console.log(jsonByLanguages);
+    });
     return jsonByLanguages;
   }
 
@@ -86,6 +112,10 @@ export class TranslationFileStructure {
 
 
 export class TranslationFileItem {
+
+  static get defaultValue() {
+    return languages.map(lang => ({ key: lang, value: '' }));
+  }
 
   key: string;
   fullKey: string;
@@ -106,18 +136,19 @@ export class TranslationFileItem {
     this.deepth = fullKey ? this.fullKey.match(/\./g).length : 0;
 
     if (value === null) {
-      this.values = [];
+      this.values = TranslationFileItem.defaultValue;
     } else if (value instanceof Array && value.every(x => ['key', 'value'].every(y => typeof x[y] === 'string'))) {
-      this.values = value;
+      this.values = value.length > 0 ? value : TranslationFileItem.defaultValue;
     } else if (typeof value === 'object') {
       this.nested = new TranslationFileStructure(value, this.fullKey, language, this);
     } else {
       if (typeof value === 'number') {
         value = `${value}`;
       }
-      this.values = language ? [{ key: language, value }] : [];
+      this.values = language ? [{ key: language, value }] : TranslationFileItem.defaultValue;
     }
     return this;
   }
+
 
 }

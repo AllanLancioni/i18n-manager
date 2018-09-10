@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { toggleViewEvent } from '../../../../controllers/events';
+import { toggleViewEvent, appStateView } from '../../../../controllers/events';
+import { appState } from '../../../../models/app-state.model';
 
 @Component({
   selector: 'app-create-item',
@@ -14,11 +15,20 @@ export class CreateItemComponent implements OnInit {
 
   ngOnInit() {
     toggleViewEvent.subscribe(x => {
-      console.log('SUBSCRIBE', x);
       if (x.view === 'CREATE_ITEM') {
         this.itemName = x.params.initialName;
       }
     });
+  }
+
+  createItem() {
+    if (!this.itemName) {
+      return;
+    }
+
+    appState.actualItemToEdit = appState.activeTranslationStructure.addByFullKey(this.itemName);
+    appState.actualView = appStateView.TRANSLATE_PANEL;
+
   }
 
 }

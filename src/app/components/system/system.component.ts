@@ -11,7 +11,7 @@ export class SystemComponent implements OnInit {
 
   @HostListener('keydown', ['$event'])
   onKeydown($event) {
-    console.log('EV', $event)
+    // console.log('EV', $event)
   }
 
   constructor(private router: Router) { }

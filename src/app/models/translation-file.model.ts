@@ -2,14 +2,15 @@ import { TranslationFileStructure, TranslationFileItem } from './translation-fil
 import { flatten, uniq } from 'lodash';
 import { languages } from './languages.model';
 import * as fs from 'fs';
+import { remote } from 'electron';
 
 export class TranslationFile {
 
-  public sortLanguagesFunction: Function = (a, b) => a > b ? 1 : (a < b ? -1: 0);
-
   private _structure: TranslationFileStructure;
 
-  get structure () { return this._structure };
+  public sortLanguagesFunction: Function = (a, b) => a > b ? 1 : (a < b ? -1 : 0);
+
+  get structure () { return this._structure; }
 
   constructor(structures: TranslationFileStructure | TranslationFileStructure[]) {
     if (!(structures instanceof Array)) {
@@ -29,7 +30,7 @@ export class TranslationFile {
   static openTranslationFile(fileNames: string[], filePath: string, appState): TranslationFile {
 
     const structures: TranslationFileStructure[] = [];
-    for (let fileName of fileNames) {
+    for (const fileName of fileNames) {
       try {
         let file: any = fs.readFileSync(`${ filePath }/${ fileName }`, 'utf8');
         if (file && typeof file === 'string') {
@@ -51,7 +52,7 @@ export class TranslationFile {
   }
 
   sortLanguages(): TranslationFile {
-    this.structure.deepIterator(x => x.values.sort((a, b) => this.sortLanguagesFunction(a.key, b.key)), 'forEach')
+    this.structure.deepIterator(x => x.values.sort((a, b) => this.sortLanguagesFunction(a.key, b.key)), 'forEach');
     return this;
   }
 

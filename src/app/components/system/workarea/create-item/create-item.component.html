@@ -1,6 +1,17 @@
 <div class="content">
 
   <h1>File name</h1>
-  <input type="text" [(ngModel)]="itemName">
+
+  <h4>You can separate categories by "." (dot).</h4>
+
+  <div class="row">
+    <div class="col-sm-10">
+      <input type="text" class="form-control" [(ngModel)]="itemName">
+    </div>
+    <div class="col-sm-2">
+      <button class="btn" style="margin-top: -10px" (click)="createItem()" [disabled]="!itemName">Add</button>
+    </div>
+  </div>
+
 
 </div>
